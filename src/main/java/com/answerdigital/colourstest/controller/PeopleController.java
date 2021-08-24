@@ -3,6 +3,7 @@ package com.answerdigital.colourstest.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +32,9 @@ public class PeopleController {
         // of people from the PeopleRepository. If there are zero
         // people returned from PeopleRepository then an empty
         // JSON array should be returned.
-        throw new NotImplementedException();
+
+        //throw new NotImplementedException();
+        return new ResponseEntity(peopleRespository.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -43,7 +46,16 @@ public class PeopleController {
         // If null is returned from the PeopleRepository with
         // the supplied id then a NotFound should be returned.
 
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
+        Person checkingPerson;
+        List<Person> peopleList = peopleRespository.findAll();
+        for (int index = 0; index < peopleList.size(); index ++){
+            checkingPerson = peopleList.get(index);
+            if (checkingPerson.getId() == id){
+                return new ResponseEntity(checkingPerson, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/{id}")
@@ -56,7 +68,20 @@ public class PeopleController {
         // updated, the person should be returned from the endpoint.
         // If null is returned from the PeopleRepository then a
         // NotFound should be returned.
-        throw new NotImplementedException();
+
+        //throw new NotImplementedException();
+        Person checkingPerson;
+        List<Person> peopleList = peopleRespository.findAll();
+        for (int index = 0; index < peopleList.size(); index ++){
+            checkingPerson = peopleList.get(index);
+            if (checkingPerson.getId() == id){
+                checkingPerson.setAuthorised(personUpdate.isAuthorised());
+                checkingPerson.setEnabled(personUpdate.isEnabled());
+                checkingPerson.setColours(personUpdate.getColours());
+                return new ResponseEntity(checkingPerson, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 
 }
